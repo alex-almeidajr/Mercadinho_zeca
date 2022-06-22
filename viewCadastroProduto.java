@@ -23,6 +23,7 @@ import cadastro.view.util.LimitaCaracteres.TipoEntrada;
 import cadastro.view.util.MonetarioDocument;
 import javax.swing.JTable;
 import javax.swing.JComboBox;
+import javax.swing.table.DefaultTableModel;
 
 
 public class viewCadastroProduto {
@@ -42,11 +43,6 @@ public class viewCadastroProduto {
 	public static JTable tableGrupo;
 	public static JTable tableFornecedor;
 	private JTextField txtConsultar;
-	
-	/**
-	 * Launch the application.
-	 */
-	
 	
 	public static void main(String[] args) {
 		//EventQueue.invokeLater(new Runnable() {
@@ -73,45 +69,11 @@ public class viewCadastroProduto {
 		txtMarca.setDocument(new LimitaCaracteres(20, TipoEntrada.NOME));
 		//txtPrecoVenda.setDocument(new LimitaCaracteres(10, TipoEntrada.NUMERODECIMAL));
 		txtUnidadeMedida.setDocument(new LimitaCaracteres(5, TipoEntrada.NOME));
-		txtEstoque.setDocument(new LimitaCaracteres(10, TipoEntrada.NUMEROINTEIRO));
-		
-		JButton btnBuscaGrupo = new javax.swing.JButton("...");
-		//btnBuscaGrupo.setEnabled(false);
-		btnBuscaGrupo.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				tableGrupo.setVisible(true);
-			}
-		});
-		//btnBuscaGrupo.setIcon(new ImageIcon("C:\\Users\\alexjr\\Documents\\NetBeansProjects\\mercadinho_zeca\\src\\icones\\icons8-pesquisar-64.png"));
-		btnBuscaGrupo.setBounds(324, 82, 18, 18);
-		frmCadastroDeProduto.getContentPane().add(btnBuscaGrupo);
-		
-		JButton btnBuscaFornecedor = new javax.swing.JButton("...");
-		//btnBuscaFornecedor.setEnabled(false);
-		btnBuscaFornecedor.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				tableFornecedor.setVisible(true);
-				
-			}
-		});
-		//btnBuscaFornecedor.setIcon(new ImageIcon("C:\\Users\\alexjr\\Documents\\NetBeansProjects\\mercadinho_zeca\\src\\icones\\icons8-pesquisar-64.png"));
-		btnBuscaFornecedor.setBounds(324, 118, 18, 18);
-		frmCadastroDeProduto.getContentPane().add(btnBuscaFornecedor);
-		
-		tableGrupo = new JTable();
-		tableGrupo.setVisible(false);
-		tableGrupo.setBounds(130, 100, 410, 115);
-		frmCadastroDeProduto.getContentPane().add(tableGrupo);
-		
-		tableFornecedor = new JTable();
-		tableFornecedor.setVisible(false);
-		tableFornecedor.setBounds(130, 136, 410, 115);
-		frmCadastroDeProduto.getContentPane().add(tableFornecedor);
-		
-		
+		txtEstoque.setDocument(new LimitaCaracteres(10, TipoEntrada.NUMEROINTEIRO));		
 		
 		  JComboBox cbTipoConsultar = new JComboBox();
-		  cbTipoConsultar.addItem("Código"); //cbTipoConsultar.addItem("Descrição");
+		  cbTipoConsultar.addItem("CÃ³digo"); 
+		  cbTipoConsultar.addItem("DescriÃ§Ã£o");
 		  cbTipoConsultar.setBounds(10, 265, 86, 21);
 		  frmCadastroDeProduto.getContentPane().add(cbTipoConsultar);
 		 
@@ -121,9 +83,7 @@ public class viewCadastroProduto {
 		txtConsultar.setBounds(108, 264, 241, 22);
 		frmCadastroDeProduto.getContentPane().add(txtConsultar);
 		
-		JButton btnCancelar = new JButton("< Anterior");
-		btnCancelar.setBounds(488, 265, 101, 23);
-		frmCadastroDeProduto.getContentPane().add(btnCancelar);
+		
 	}
 
 
@@ -137,9 +97,7 @@ public class viewCadastroProduto {
 		frmCadastroDeProduto.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmCadastroDeProduto.getContentPane().setLayout(null);
 		
-		JButton btnPrximo = new JButton("Pr\u00F3ximo >");
-		btnPrximo.setBounds(488, 231, 101, 23);
-		frmCadastroDeProduto.getContentPane().add(btnPrximo);
+		
 		
 		JLabel lblNewLabel = new JLabel("C\u00F3digo");
 		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 12));
@@ -236,67 +194,61 @@ public class viewCadastroProduto {
 		cbAtivo.setBounds(398, 149, 55, 23);
 		frmCadastroDeProduto.getContentPane().add(cbAtivo);
 		
-		JButton btnIncluir = new JButton("Incluir");
-		btnIncluir.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				txtCodigoBarra.setEditable(true);
-				txtDescricao.setEditable(true);
-				cbAtivo.setEnabled(true);
-				txtMarca.setEditable(true);
-				txtPrecoVenda.setEditable(true);
-				txtUnidadeMedida.setEditable(true);
-				txtEstoque.setEditable(true);
-			}
-		});
-		
-		btnIncluir.setBounds(488, 13, 101, 23);
-		frmCadastroDeProduto.getContentPane().add(btnIncluir);
-		
-		JButton btnAlterar = new JButton("Alterar");
-		btnAlterar.setBounds(488, 51, 101, 23);
-		frmCadastroDeProduto.getContentPane().add(btnAlterar);
-		
 		JButton btnExcluir = new JButton("Excluir");
 		btnExcluir.setEnabled(false);
+		btnExcluir.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				CadastroDAO cadastroDAO = new CadastroDAO();
+				int cod = Integer.parseInt(txtCodigo.getText());
+				cadastroDAO.excluir(cod);				
+			}
+		});
 		btnExcluir.setBounds(488, 87, 101, 23);
 		frmCadastroDeProduto.getContentPane().add(btnExcluir);
 		
-		JButton btnConsultar = new javax.swing.JButton("Consultar");
-		btnConsultar.addActionListener(new ActionListener() {
+		JButton btnBuscaGrupo = new javax.swing.JButton("...");
+		btnBuscaGrupo.setEnabled(false);
+		btnBuscaGrupo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int codigoConsulta = Integer.parseInt(txtConsultar.getText());
-				CadastroDAO cadastroDAO = new CadastroDAO();
-				CadastroProduto cadastro = cadastroDAO.consulta(codigoConsulta);
-				
-				if (cadastro == null) {
-					JOptionPane.showMessageDialog(btnConsultar, "Cadastro não encontrado!");
-				}
-				else {
-					
-					txtCodigo.setText(Integer.toString(cadastro.getCodigo()));
-					txtCodigoBarra.setText(cadastro.getCodigo_barras());
-					txtDescricao.setText(cadastro.getDescricao());
-					txtGrupo.setText(Integer.toString(cadastro.getGrupo()));
-					txtFornecedor.setText(Integer.toString(cadastro.getFornecedor()));
-					txtMarca.setText(cadastro.getMarca());
-					cbAtivo.setSelected(cadastro.isAtivo());
-					txtUnidadeMedida.setText(cadastro.getUnidade_medida());
-					txtEstoque.setText(Integer.toString(cadastro.getEstoque()));
-					txtPrecoVenda.setText(Double.toString(cadastro.getPreco_venda()));
-					
-			        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-			        String dataFormatada = dateFormat.format(cadastro.getData_cadastro());
-					
-					txtDataCadastro.setText(dataFormatada);
-				}
+				tableGrupo.setVisible(true);
+				//tableGrupo.
 			}
 		});
+
+		btnBuscaGrupo.setBounds(324, 82, 18, 18);
+		frmCadastroDeProduto.getContentPane().add(btnBuscaGrupo);
 		
+		JButton btnBuscaFornecedor = new javax.swing.JButton("...");
+		btnBuscaFornecedor.setEnabled(false);
+		btnBuscaFornecedor.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				tableFornecedor.setVisible(true);
+				
+			}
+		});
+
+		btnBuscaFornecedor.setBounds(324, 118, 18, 18);
+		frmCadastroDeProduto.getContentPane().add(btnBuscaFornecedor);
 		
-		btnConsultar.setBounds(359, 264, 94, 23);
-		frmCadastroDeProduto.getContentPane().add(btnConsultar);
+		tableGrupo = new JTable();
+		tableGrupo.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				
+			}
+		));
+		tableGrupo.setVisible(false);
+		tableGrupo.setBounds(130, 100, 410, 115);
+		frmCadastroDeProduto.getContentPane().add(tableGrupo);
+		
+		tableFornecedor = new JTable();
+		tableFornecedor.setVisible(false);
+		tableFornecedor.setBounds(130, 136, 410, 115);
+		frmCadastroDeProduto.getContentPane().add(tableFornecedor);
 		
 		JButton btnSalvar = new javax.swing.JButton("Salvar");
+		btnSalvar.setEnabled(false);
 		//btnSalvar.setEnabled(false);
 		btnSalvar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -323,6 +275,7 @@ public class viewCadastroProduto {
 		frmCadastroDeProduto.getContentPane().add(btnSalvar);
 		
 		JButton btnCancelar = new javax.swing.JButton("Cancelar");
+		btnCancelar.setEnabled(false);
 		//btnCancelar.setEnabled(false);
 		btnCancelar.addActionListener(new ActionListener() {
 
@@ -351,11 +304,201 @@ public class viewCadastroProduto {
 				txtPrecoVenda.setEditable(false);
 				btnCancelar.setEnabled(false);
 				btnSalvar.setEnabled(false);
-				
+				btnExcluir.setEnabled(false);
+				cbAtivo.setEnabled(false);
+				btnBuscaGrupo.setEnabled(false);
+				btnBuscaFornecedor.setEnabled(false);			
 			}
 		});
 		btnCancelar.setBounds(488, 158, 101, 23);
 		frmCadastroDeProduto.getContentPane().add(btnCancelar);
+		
+		JButton btnIncluir = new JButton("Incluir");
+		btnIncluir.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				txtCodigoBarra.setEditable(true);
+				txtDescricao.setEditable(true);
+				cbAtivo.setEnabled(true);
+				txtMarca.setEditable(true);
+				txtPrecoVenda.setEditable(true);
+				txtUnidadeMedida.setEditable(true);
+				txtEstoque.setEditable(true);
+				btnSalvar.setEnabled(true);
+				btnCancelar.setEnabled(true);
+				btnBuscaGrupo.setEnabled(true);
+				btnBuscaFornecedor.setEnabled(true);
+
+				txtCodigo.setText("");
+				txtDescricao.setText("");
+				txtCodigoBarra.setText("");
+				txtGrupo.setText("");
+				txtFornecedor.setText("");
+				txtEstoque.setText("");
+				txtDataCadastro.setText("");
+				txtMarca.setText("");
+				txtUnidadeMedida.setText("");
+				txtPrecoVenda.setText("");
+			}
+		});
+		btnIncluir.setBounds(488, 13, 101, 23);
+		frmCadastroDeProduto.getContentPane().add(btnIncluir);
+		
+		JButton btnAlterar = new JButton("Alterar");
+		btnAlterar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				txtDescricao.setEditable(true);
+				txtCodigoBarra.setEditable(true);
+				txtGrupo.setEnabled(true);
+				txtFornecedor.setEnabled(true);
+				txtEstoque.setEditable(true);
+				txtMarca.setEditable(true);
+				txtUnidadeMedida.setEditable(true);
+				txtPrecoVenda.setEditable(true);
+				btnCancelar.setEnabled(true);
+				//Alterar o contexto aqui pois o btnSalvar nÃ£o vai ser acionado pelo Incluir() e sim pelo Alterar()
+				btnSalvar.setEnabled(true);
+				btnExcluir.setEnabled(false);
+				cbAtivo.setEnabled(true);
+				btnBuscaGrupo.setEnabled(true);
+				btnBuscaFornecedor.setEnabled(true);	
+				
+			}
+		});
+		btnAlterar.setEnabled(false);
+		btnAlterar.setBounds(488, 51, 101, 23);
+		frmCadastroDeProduto.getContentPane().add(btnAlterar);
+		
+		JButton btnPrximo = new JButton("Pr\u00F3ximo >");
+		btnPrximo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int codigoConsulta = Integer.parseInt(txtCodigo.getText());
+				CadastroDAO cadastroDAO = new CadastroDAO();
+				CadastroProduto cadastro;
+				try {
+					cadastro = cadastroDAO.consulta(codigoConsulta+1);
+					if ((txtCodigo.getText() == null) || cadastro == null) {
+						btnPrximo.setEnabled(false);
+						//btnAnterior.setEnabled(true);
+					}
+					else {
+						btnExcluir.setEnabled(true);
+						txtCodigo.setText(Integer.toString(cadastro.getCodigo()));
+						txtCodigoBarra.setText(cadastro.getCodigo_barras());
+						txtDescricao.setText(cadastro.getDescricao());
+						txtGrupo.setText(Integer.toString(cadastro.getGrupo()));
+						txtFornecedor.setText(Integer.toString(cadastro.getFornecedor()));
+						txtMarca.setText(cadastro.getMarca());
+						cbAtivo.setSelected(cadastro.isAtivo());
+						txtUnidadeMedida.setText(cadastro.getUnidade_medida());
+						txtEstoque.setText(Integer.toString(cadastro.getEstoque()));
+						txtPrecoVenda.setText(Double.toString(cadastro.getPreco_venda()));
+						
+						String pattern = "dd-MM-yyyy";
+						SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+
+						String data = simpleDateFormat.format(new Date());
+						
+						txtDataCadastro.setText(data);
+						txtConsultar.setText("");
+						btnAlterar.setEnabled(true);
+						btnIncluir.setEnabled(false);
+					}
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		btnPrximo.setBounds(488, 231, 101, 23);
+		frmCadastroDeProduto.getContentPane().add(btnPrximo);
+		
+		JButton btnAnterior = new JButton("< Anterior");
+		btnAnterior.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int codigoConsulta = Integer.parseInt(txtCodigo.getText());
+				CadastroDAO cadastroDAO = new CadastroDAO();
+				CadastroProduto cadastro;
+				try {
+					cadastro = cadastroDAO.consulta(codigoConsulta-1);
+					if ((txtCodigo.getText() == null) || cadastro == null) {
+						//btnAnterior.setEnabled(false);
+						btnPrximo.setEnabled(true);
+					}
+					else {
+						btnExcluir.setEnabled(true);
+						txtCodigo.setText(Integer.toString(cadastro.getCodigo()));
+						txtCodigoBarra.setText(cadastro.getCodigo_barras());
+						txtDescricao.setText(cadastro.getDescricao());
+						txtGrupo.setText(Integer.toString(cadastro.getGrupo()));
+						txtFornecedor.setText(Integer.toString(cadastro.getFornecedor()));
+						txtMarca.setText(cadastro.getMarca());
+						cbAtivo.setSelected(cadastro.isAtivo());
+						txtUnidadeMedida.setText(cadastro.getUnidade_medida());
+						txtEstoque.setText(Integer.toString(cadastro.getEstoque()));
+						txtPrecoVenda.setText(Double.toString(cadastro.getPreco_venda()));
+						
+						String pattern = "dd-MM-yyyy";
+						SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+
+						String data = simpleDateFormat.format(new Date());
+						
+						txtDataCadastro.setText(data);
+						txtConsultar.setText("");
+						btnAlterar.setEnabled(true);
+						btnIncluir.setEnabled(false);
+					}
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		btnAnterior.setBounds(488, 265, 101, 23);
+		frmCadastroDeProduto.getContentPane().add(btnAnterior);
+		
+		JButton btnConsultar = new javax.swing.JButton("Consultar");
+		btnConsultar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int codigoConsulta = Integer.parseInt(txtConsultar.getText());
+				CadastroDAO cadastroDAO = new CadastroDAO();
+				CadastroProduto cadastro;
+				try {
+					cadastro = cadastroDAO.consulta(codigoConsulta);
+					if (cadastro == null) {
+						JOptionPane.showMessageDialog(btnConsultar, "Cadastro nÃ£o encontrado!");
+						txtConsultar.setText("");
+					}
+					else {
+						btnExcluir.setEnabled(true);
+						txtCodigo.setText(Integer.toString(cadastro.getCodigo()));
+						txtCodigoBarra.setText(cadastro.getCodigo_barras());
+						txtDescricao.setText(cadastro.getDescricao());
+						txtGrupo.setText(Integer.toString(cadastro.getGrupo()));
+						txtFornecedor.setText(Integer.toString(cadastro.getFornecedor()));
+						txtMarca.setText(cadastro.getMarca());
+						cbAtivo.setSelected(cadastro.isAtivo());
+						txtUnidadeMedida.setText(cadastro.getUnidade_medida());
+						txtEstoque.setText(Integer.toString(cadastro.getEstoque()));
+						txtPrecoVenda.setText(Double.toString(cadastro.getPreco_venda()));
+						
+						String pattern = "dd-MM-yyyy";
+						SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+
+						String data = simpleDateFormat.format(new Date());
+						
+						txtDataCadastro.setText(data);
+						txtConsultar.setText("");
+						btnAlterar.setEnabled(true);
+						btnIncluir.setEnabled(false);
+					}
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+				
+			}
+		});		
+		btnConsultar.setBounds(359, 264, 94, 23);
+		frmCadastroDeProduto.getContentPane().add(btnConsultar);
+		
+
 		
 		JSeparator separator = new JSeparator();
 		separator.setOrientation(SwingConstants.VERTICAL);
