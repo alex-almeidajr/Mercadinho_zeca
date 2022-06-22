@@ -9,6 +9,7 @@ import java.util.List;
 import com.mysql.jdbc.PreparedStatement;
 
 import cadastro.factory.ConnectionFactory;
+import cadastro.model.CadastroGrupo;
 import cadastro.model.CadastroProduto;
 
 public class CadastroDAO {
@@ -37,7 +38,7 @@ public class CadastroDAO {
 			pstm.setDate(7, new Date(cadastro.getData_cadastro().getTime()));
 			pstm.setString(8, cadastro.getUnidade_medida());
 			
-			System.out.println("Cadastro incluído com sucesso!");
+			System.out.println("Cadastro incluÃ­do com sucesso!");
 			pstm.execute();
 		}catch (Exception e) {
 			e.printStackTrace();
@@ -56,8 +57,10 @@ public class CadastroDAO {
 		}
 	}
 	
-	public CadastroProduto consulta(int codigo) {
+	public CadastroProduto consulta(int codigo) throws Exception {
 		String sql = "SELECT * FROM produto WHERE codigo = ?";
+		conn = ConnectionFactory.createConnectionToMySQL();
+		//PreparedStatement pstm = null;
 		
 		try {
 			PreparedStatement pstm = (PreparedStatement) conn.prepareStatement(sql);
@@ -65,19 +68,19 @@ public class CadastroDAO {
 			ResultSet rset = pstm.executeQuery();
 			CadastroProduto cadastro = new CadastroProduto();
 			rset.first();
-			cadastro.setCodigo(codigo);
+			//cadastro.setCodigo(codigo);
 			
-			//cadastro.setCodigo(rset.getInt("codigo"));
+			cadastro.setCodigo(rset.getInt("codigo"));
 			cadastro.setDescricao(rset.getString("descricao"));
 			cadastro.setCodigo_barras(rset.getString("codigo_barras"));
 			cadastro.setGrupo(rset.getInt("grupo"));
 			cadastro.setFornecedor(rset.getInt("fornecedor"));
-			cadastro.setMarca(rset.getString("marca"));
 			cadastro.setAtivo(rset.getBoolean("ativo"));
+			cadastro.setMarca(rset.getString("marca"));
 			cadastro.setUnidade_medida(rset.getString("unidade_medida"));
-			cadastro.setEstoque(rset.getInt("estoque"));
 			cadastro.setPreco_venda(rset.getDouble("preco_venda"));
 			cadastro.setData_cadastro(rset.getDate("data_cadastro"));
+			cadastro.setEstoque(rset.getInt("estoque"));
 
 			return cadastro;
 		
@@ -86,61 +89,36 @@ public class CadastroDAO {
 		}		
 	}
 	
-	public List<CadastroProduto> consultar(){
-		String sql = "SELECT * FROM produto";
-		
-		List<CadastroProduto> cadastros = new ArrayList<CadastroProduto>();
-		
-		Connection conn = null;
-		PreparedStatement pstm = null;
-		//Classe que vai recuperar os dados do banco. (SELECT)
-		ResultSet rset = null;
+	public CadastroProduto consultaGrupo(int codigo) throws Exception {
+		String sql = "SELECT * FROM grupo WHERE codigo = ?";
+		conn = ConnectionFactory.createConnectionToMySQL();
+		//PreparedStatement pstm = null;
 		
 		try {
-			conn = ConnectionFactory.createConnectionToMySQL();
+			PreparedStatement pstm = (PreparedStatement) conn.prepareStatement(sql);
+			pstm.setInt(1, codigo);
+			ResultSet rset = pstm.executeQuery();
+			CadastroProduto cadastro = new CadastroProduto();
+			rset.first();
+			//cadastro.setCodigo(codigo);
 			
-			pstm = (PreparedStatement) conn.prepareStatement(sql);
-			
-			rset = pstm.executeQuery();
-			
-			while (rset.next()) {
-				CadastroProduto cadastro = new CadastroProduto();
-				
-				cadastro.setCodigo(rset.getInt("codigo"));
-				cadastro.setDescricao(rset.getString("descricao"));
-				cadastro.setCodigo_barras(rset.getString("codigo_barras"));
-				cadastro.setGrupo(rset.getInt("grupo"));
-				cadastro.setFornecedor(rset.getInt("fornecedor"));
-				cadastro.setAtivo(rset.getBoolean("ativo"));
-				cadastro.setMarca(rset.getString("marca"));
-				cadastro.setPreco_venda(rset.getDouble("preco_venda"));
-				cadastro.setData_cadastro(rset.getDate("data_cadastro"));
-				cadastro.setEstoque(rset.getInt("estoque"));
-				
-				cadastros.add(cadastro);
-			}
+			cadastro.setCodigo(rset.getInt("codigo"));
+			cadastro.setDescricao(rset.getString("descricao"));
+			cadastro.setCodigo_barras(rset.getString("codigo_barras"));
+			cadastro.setGrupo(rset.getInt("grupo"));
+			cadastro.setFornecedor(rset.getInt("fornecedor"));
+			cadastro.setAtivo(rset.getBoolean("ativo"));
+			cadastro.setMarca(rset.getString("marca"));
+			cadastro.setUnidade_medida(rset.getString("unidade_medida"));
+			cadastro.setPreco_venda(rset.getDouble("preco_venda"));
+			cadastro.setData_cadastro(rset.getDate("data_cadastro"));
+			cadastro.setEstoque(rset.getInt("estoque"));
+
+			return cadastro;
+		
 		}catch (Exception e) {
-			e.printStackTrace();
-		}finally {
-			try {
-				if(rset!=null) {
-					rset.close();
-				}
-				
-				if(pstm!=null) {
-					pstm.close();
-				}
-				
-				if(conn!=null) {
-					conn.close();
-				}
-			}catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		
-		return cadastros;
-		
+			return null;
+		}		
 	}
 
 	public void alterar(CadastroProduto cadastro) {
@@ -184,7 +162,7 @@ public class CadastroDAO {
 		}
 	}
 
-	public void excluir(CadastroProduto cadastro) {
+	public void excluir(int codigo) {
 		
 		String sql = "DELETE FROM produto WHERE codigo = ?";
 		
@@ -195,7 +173,7 @@ public class CadastroDAO {
 			conn = ConnectionFactory.createConnectionToMySQL();
 			pstm = (PreparedStatement) conn.prepareStatement(sql);
 			
-			pstm.setInt(1, cadastro.getCodigo());
+			pstm.setInt(1, codigo);
 			
 			pstm.execute();
 		}catch (Exception e) {
@@ -213,5 +191,54 @@ public class CadastroDAO {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	public List<CadastroGrupo> consultarGrupo(){
+		String sql = "SELECT * FROM grupo_produto";
+		
+		List<CadastroGrupo> cadastros = new ArrayList<CadastroGrupo>();
+		
+		Connection conn = null;
+		PreparedStatement pstm = null;
+		//Classe que vai recuperar os dados do banco. (SELECT)
+		ResultSet rset = null;
+		
+		try {
+			conn = ConnectionFactory.createConnectionToMySQL();
+			
+			pstm = (PreparedStatement) conn.prepareStatement(sql);
+			
+			rset = pstm.executeQuery();
+			
+			while (rset.next()) {
+				CadastroGrupo cadastro = new CadastroGrupo();
+				
+				cadastro.setCodigo(rset.getInt("codigo"));
+				cadastro.setDescricao(rset.getString("descricao"));
+				cadastro.setAtivo(rset.getBoolean("ativo"));				
+				cadastros.add(cadastro);
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(rset!=null) {
+					rset.close();
+				}
+				
+				if(pstm!=null) {
+					pstm.close();
+				}
+				
+				if(conn!=null) {
+					conn.close();
+				}
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return cadastros;
+		
 	}
 }
