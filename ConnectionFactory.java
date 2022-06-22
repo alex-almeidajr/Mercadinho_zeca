@@ -21,9 +21,8 @@ public class ConnectionFactory {
 		Connection con = createConnectionToMySQL();
 		
 		if(con != null) {
-			System.out.println("Conex„o obtida com sucesso!");
+			System.out.println("Conex√£o obtida com sucesso!");
 			con.close();
 		}
 	}		
 }
- 
